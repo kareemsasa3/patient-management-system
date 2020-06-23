@@ -33,7 +33,17 @@ def patient_options():
         patient_options()
     return 0
 
+patient_options()
+
 def create_database():
+    if not os.path.isdir(path):
+        os.mkdir(path)
+        print("Successfully created directory " + path)
+    elif os.path.isdir(path):
+        return 0
+    else:
+        print("Unable to create patient directory at " + path)
+        exit -1
     return 0
 
 def add_patient():
