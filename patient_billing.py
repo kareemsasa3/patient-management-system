@@ -30,7 +30,6 @@ def patient_options():
     print()
     continue_program = input("Would you like to do anything else? (Y or N): ")
     if continue_program in ('Y', 'y'):
-        print()
         patient_options()
     else:
         exit
@@ -51,25 +50,54 @@ def create_database():
 def add_patient():
     first_name = input("\nEnter patient first name: ")
     last_name = input("Enter patient last name: ")
-    billing_date = input("Enter initial billing date (MM/DD/YYYY): ")
-    billing_amount = input("Enter billing amount: ")
-    defib = input("Does patient use a defibrillator? (Y or N): ")
-    
+
     file_name = first_name.lower() + last_name.lower() + ".txt"
     file_to_open = data_folder / file_name
 
     if os.path.isfile(file_to_open):
-        print("File already exists")
+        print("\nFile already exists for this patient")
         patient_options()
-    elif not os.path.isfile(file_to_open):
-        f = open(file_to_open, 'w')
-        patient_information = [first_name.upper() + ' ' + last_name.upper() + '\n', billing_date + '\n', billing_amount + '\n', defib.upper() + '\n']
-        f.writelines(patient_information)
-        f.close()
+
+    billing_date = input("Enter initial billing date (MM/DD/YYYY): ")
+    billing_amount = input("Enter billing amount: ")
+    defib = input("Does patient use a defibrillator? (Y or N): ")
+
+    f = open(file_to_open, 'w')
+    patient_information = [first_name.upper() + ' ' + last_name.upper() + '\n', billing_date + '\n', billing_amount + '\n', defib.upper() + '\n']
+    f.writelines(patient_information)
+    f.close()
+
     print("\nNew file has been successfully created for " + first_name.upper(), last_name.upper())
     return 0
 
-def read_patient():
+def read_patient(first="", last=""):
+    if first:
+        first_name = first
+    else:
+        first_name = input("\nEnter patient first name: ").lower()
+
+    if last:
+        last_name = last
+    else:
+        last_name = input("Enter patient last name: ").lower()
+    
+    file_name = first_name + last_name + ".txt"
+    print()
+
+    if not os.path.isfile(data_folder / file_name):
+        print("No file found for " + first_name.upper(), last_name.upper())
+        create_patient = input("Would you like to create a new patient? (Y or N): ")
+
+        if create_patient in ('Y', 'y'):
+            add_patient()
+        else:
+            patient_options()
+
+    with open(data_folder / file_name, 'r') as f:
+        line = f.readline()
+        while line != '':
+            print(line, end='')
+            line = f.readline()
     return 0
 
 def update_patient():
