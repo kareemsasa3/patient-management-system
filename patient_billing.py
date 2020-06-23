@@ -1,9 +1,10 @@
 import os
+from pathlib import Path
 
-path = os.getcwd() + '\\patients\\'
+data_folder = Path("patients/")
 
 def patient_options():
-    print("Enter one of the following actions: ")
+    print("\nEnter one of the following actions: ")
     print("A - Add a new patient")
     print("R - Read a patient record")
     print("U - Update a patient's information")
@@ -31,22 +32,41 @@ def patient_options():
     if continue_program in ('Y', 'y'):
         print()
         patient_options()
+    else:
+        exit
     return 0
 
-patient_options()
-
 def create_database():
-    if not os.path.isdir(path):
-        os.mkdir(path)
-        print("Successfully created directory " + path)
-    elif os.path.isdir(path):
+    if not os.path.isdir(data_folder):
+        os.mkdir(data_folder)
+        print("Successfully created directory " + data_folder)
+    elif os.path.isdir(data_folder):
+        print("Directory " + data_folder + " already exists")
         return 0
     else:
-        print("Unable to create patient directory at " + path)
-        exit -1
+        print("Unable to create patient directory at " + data_folder)
+        exit
     return 0
 
 def add_patient():
+    first_name = input("\nEnter patient first name: ")
+    last_name = input("Enter patient last name: ")
+    billing_date = input("Enter initial billing date (MM/DD/YYYY): ")
+    billing_amount = input("Enter billing amount: ")
+    defib = input("Does patient use a defibrillator? (Y or N): ")
+    
+    file_name = first_name.lower() + last_name.lower() + ".txt"
+    file_to_open = data_folder / file_name
+
+    if os.path.isfile(file_to_open):
+        print("File already exists")
+        patient_options()
+    elif not os.path.isfile(file_to_open):
+        f = open(file_to_open, 'w')
+        patient_information = [first_name.upper() + ' ' + last_name.upper() + '\n', billing_date + '\n', billing_amount + '\n', defib.upper() + '\n']
+        f.writelines(patient_information)
+        f.close()
+    print("\nNew file has been successfully created for " + first_name.upper(), last_name.upper())
     return 0
 
 def read_patient():
@@ -63,3 +83,5 @@ def delete_patient():
 
 def total_patients():
     return 0
+
+patient_options()
