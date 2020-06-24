@@ -101,9 +101,54 @@ def read_patient(first="", last=""):
     return 0
 
 def update_patient():
+    first_name = input("\nEnter patient first name: ").lower()
+    last_name = input("\nEnter patient last name: ").lower()
+    file_name = first_name + last_name + ".txt"
+
+    if os.path.isfile(data_folder / file_name):
+        print("file exists!")
+        read_patient(first_name, last_name)
+        print()
+    elif not os.path.isfile(path + file_name):
+        print("No file found for that patient")
+
+
+    print("What variable would you like to update?")
+    print("B - Next billing date")
+    print("A - Amount to charge patient")
+    print("D - Defibrillator status")
+
+    user_input = input("= ")
+
+    if user_input in ('B', 'b'):
+       update_information(file_name, 1)
+    elif user_input in ('A', 'a'):
+        update_information(file_name, 2)
+    elif user_input in ('D', 'd'):
+        update_information(file_name, 3)
+    else:
+        print("\nUser entered character with no update options\n")
+        patient_options()
+
     return 0
 
-def update_information():
+def update_information(file_name, i):
+    print()
+    with open(data_folder + file_name, 'r') as f:
+        data = f.readlines()
+
+    if i == 1:
+        new_billing_date = input("Enter a new billing date (MM/DD/YYYY): ")
+        data[i] = new_billing_date + '\n'
+    elif i == 2:
+        new_billing_amount = input("Enter a new billing amount: ")
+        data[i] = new_billing_amount + '\n'
+    elif i == 3:
+        new_defib_status = input("Does the patient use a defibrillator? (Y or N): ").upper()
+        data[i] = new_defib_status + '\n'
+    
+    with open(data_folder + file_name, 'w') as f:
+        f.writelines(data)
     return 0
 
 def delete_patient():
