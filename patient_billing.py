@@ -152,6 +152,15 @@ def update_information(file_name, i):
     return 0
 
 def delete_patient():
+    first_name = input("Enter patient first name: ").lower()
+    last_name = input("Enter patient last name: ").lower()
+    file_name = first_name + last_name + ".txt"
+
+    if not os.path.isfile(path + file_name):
+        print("No file found for that patient")
+    else:
+        os.remove(path + file_name)
+        print("File for patient " + first_name + last_name + "has been successfully deleted")
     return 0
 
 def total_patients():
